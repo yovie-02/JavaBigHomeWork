@@ -43,24 +43,38 @@ public class SocketServerHandler implements Runnable {
             System.out.println("" + dto.toString());
 
             // 处理命令逻辑(TODO://改成可动态适配的模式)
+//            if (dto.getType() == ActionTypeEnum.GET) {
+//                String value = this.store.get(dto.getKey());
+//                LoggerUtil.debug(LOGGER, "[SocketServerHandler][run]: {}", "get action resp" + dto.toString());
+//                RespDTO resp = new RespDTO(RespStatusTypeEnum.SUCCESS, value);
+//                oos.writeObject(resp);
+//                oos.flush();
+//            }
+//            if (dto.getType() == ActionTypeEnum.SET) {
+//                this.store.set(dto.getKey(), dto.getValue());
+//                LoggerUtil.debug(LOGGER, "[SocketServerHandler][run]: {}", "set action resp" + dto.toString());
+//                RespDTO resp = new RespDTO(RespStatusTypeEnum.SUCCESS, null);
+//                oos.writeObject(resp);
+//                oos.flush();
+//            }
+//            if (dto.getType() == ActionTypeEnum.RM) {
+//                this.store.rm(dto.getKey());
+//            }
+            RespDTO resp;
             if (dto.getType() == ActionTypeEnum.GET) {
                 String value = this.store.get(dto.getKey());
-                LoggerUtil.debug(LOGGER, "[SocketServerHandler][run]: {}", "get action resp" + dto.toString());
-                RespDTO resp = new RespDTO(RespStatusTypeEnum.SUCCESS, value);
-                oos.writeObject(resp);
-                oos.flush();
-            }
-            if (dto.getType() == ActionTypeEnum.SET) {
+                resp = new RespDTO(RespStatusTypeEnum.SUCCESS, value);
+            } else if (dto.getType() == ActionTypeEnum.SET) {
                 this.store.set(dto.getKey(), dto.getValue());
-                LoggerUtil.debug(LOGGER, "[SocketServerHandler][run]: {}", "set action resp" + dto.toString());
-                RespDTO resp = new RespDTO(RespStatusTypeEnum.SUCCESS, null);
-                oos.writeObject(resp);
-                oos.flush();
-            }
-            if (dto.getType() == ActionTypeEnum.RM) {
+                resp = new RespDTO(RespStatusTypeEnum.SUCCESS, null);
+            } else if (dto.getType() == ActionTypeEnum.RM) {
                 this.store.rm(dto.getKey());
+                resp = new RespDTO(RespStatusTypeEnum.SUCCESS, null);
+            } else {
+                resp = new RespDTO(RespStatusTypeEnum.FAIL, null);
             }
-
+            oos.writeObject(resp);
+            oos.flush();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
