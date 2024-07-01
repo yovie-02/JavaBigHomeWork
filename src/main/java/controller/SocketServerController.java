@@ -36,19 +36,20 @@ public class SocketServerController implements Controller {
         this.store = store;
     }
 
+
     @Override
     public void set(String key, String value) {
-
+        store.set(key, value);
     }
 
     @Override
     public String get(String key) {
-        return null;
+        return store.get(key);
     }
 
     @Override
     public void rm(String key) {
-
+        store.rm(key);
     }
 
     @Override

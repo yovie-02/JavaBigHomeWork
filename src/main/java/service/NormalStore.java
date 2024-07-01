@@ -68,6 +68,8 @@ public class NormalStore implements Store {
      * 持久化阈值
      */
 //    private final int storeThreshold;
+    private final int storeThreshold = 1000;
+
 
     public NormalStore(String dataDir) {
         this.dataDir = dataDir;
@@ -122,6 +124,11 @@ public class NormalStore implements Store {
             // 加锁
             indexLock.writeLock().lock();
             // TODO://先写内存表，内存表达到一定阀值再写进磁盘
+            memTable.put(key, command);
+
+            if (memTable.size() >= storeThreshold) {
+                flushMemTableToDisk();
+            }
             // 写table（wal）文件
             RandomAccessFileUtil.writeInt(this.genFilePath(), commandBytes.length);
             int pos = RandomAccessFileUtil.write(this.genFilePath(), commandBytes);
@@ -173,9 +180,16 @@ public class NormalStore implements Store {
             // 加锁
             indexLock.writeLock().lock();
             // TODO://先写内存表，内存表达到一定阀值再写进磁盘
+            memTable.put(key, command);
+
+            if (memTable.size() >= storeThreshold) {
+                flushMemTableToDisk();
+            }
 
             // 写table（wal）文件
+            RandomAccessFileUtil.writeInt(this.genFilePath(), commandBytes.length);
             int pos = RandomAccessFileUtil.write(this.genFilePath(), commandBytes);
+
             // 保存到memTable
 
             // 添加索引

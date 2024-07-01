@@ -52,6 +52,7 @@ public class SocketClient implements Client {
             RespDTO resp = (RespDTO) ois.readObject();
             System.out.println("resp data: "+ resp.toString());
             // 接收响应数据
+            return resp.getValue();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -63,12 +64,9 @@ public class SocketClient implements Client {
         try (Socket socket = new Socket(host, port);
              ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
              ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
-            // 创建一个删除操作的 ActionDTO 对象
             ActionDTO dto = new ActionDTO(ActionTypeEnum.RM, key, null);
-            // 将 ActionDTO 对象写入输出流，发送给服务器
             oos.writeObject(dto);
             oos.flush();
-            // 从输入流读取服务器的响应
             RespDTO resp = (RespDTO) ois.readObject();
             System.out.println("resp data: " + resp.toString());
         } catch (IOException | ClassNotFoundException e) {
