@@ -75,5 +75,4 @@ public class SocketClient implements Client {
             e.printStackTrace();
         }
     }
-
 }
