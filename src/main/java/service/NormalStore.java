@@ -191,8 +191,24 @@ public class NormalStore implements Store {
         }
     }
 
+    private void flushMemTableToDisk() {
+        for (String key : memTable.keySet()) {
+            Command command = memTable.get(key);
+            byte[] commandBytes = JSONObject.toJSONBytes(command);
+            RandomAccessFileUtil.writeInt(this.genFilePath(), commandBytes.length);
+            int pos = RandomAccessFileUtil.write(this.genFilePath(), commandBytes);
+            CommandPos cmdPos = new CommandPos(pos, commandBytes.length);
+            index.put(key, cmdPos);
+        }
+        memTable.clear();
+    }
     @Override
     public void close() throws IOException {
-
+        indexLock.writeLock().lock();
+        try {
+            flushMemTableToDisk();
+        } finally {
+            indexLock.writeLock().unlock();
+        }
     }
 }
