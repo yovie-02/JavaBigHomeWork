@@ -33,7 +33,7 @@ public class CmdClient implements Client{
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to the KV Database Client. Type 'exit' to quit.");
+        System.out.println("模拟数据库：set <key> <value> | get <key> | rm <key> exit");
         while (true) {
             System.out.print("> ");
             String command = scanner.nextLine();
@@ -42,7 +42,7 @@ public class CmdClient implements Client{
             }
             String[] parts = command.split(" ");
             if (parts.length < 2) {
-                System.out.println("Invalid command. Usage: set <key> <value> | get <key> | rm <key>");
+                System.out.println("请输入正确的格式: set <key> <value> | get <key> | rm <key>");
                 continue;
             }
             String action = parts[0];
@@ -50,23 +50,23 @@ public class CmdClient implements Client{
             switch (action.toLowerCase()) {
                 case "set":
                     if (parts.length < 3) {
-                        System.out.println("Invalid command. Usage: set <key> <value>");
+                        System.out.println("c: set <key> <value>");
                         continue;
                     }
                     String value = parts[2];
                     set(key, value);
-                    System.out.println("Set key: " + key + " with value: " + value);
+                    System.out.println("set key: " + key + " 和 value: " + value);
                     break;
                 case "get":
                     String result = get(key);
-                    System.out.println("Get key: " + key + " with value: " + result);
+                    System.out.println("get key: " + key + " 和 value: " + result);
                     break;
                 case "rm":
                     rm(key);
-                    System.out.println("Removed key: " + key);
+                    System.out.println("removed key: " + key);
                     break;
                 default:
-                    System.out.println("Unknown command. Usage: set <key> <value> | get <key> | rm <key>");
+                    System.out.println("请输入正确的格式: set <key> <value> | get <key> | rm <key>");
                     break;
             }
         }

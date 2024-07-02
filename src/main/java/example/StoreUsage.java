@@ -22,6 +22,6 @@ public class StoreUsage {
 //        System.out.println(store.get("zsy4"));
 //        store.rm("zsy4");
 //        System.out.println(store.get("zsy4"));
-        store.get("name");
+        store.get("name2");
     }
 }
